@@ -36,6 +36,8 @@ class proftpd::config {
         file { $real_options['ROOT']['AuthUserFile']:
           ensure => present,
           mode   => '0600',
+          owner  => $::proftpd::user,
+          group  => $::proftpd::group,
           before => File[$::proftpd::config],
         }
       }
@@ -46,6 +48,8 @@ class proftpd::config {
         file { $real_options['Global']['AuthUserFile']:
           ensure => present,
           mode   => '0600',
+          owner  => $::proftpd::user,
+          group  => $::proftpd::group,
           before => File[$::proftpd::config],
         }
       }
@@ -56,6 +60,8 @@ class proftpd::config {
         file { $real_options['ROOT']['AuthGroupFile']:
           ensure => present,
           mode   => '0600',
+          owner  => $::proftpd::user,
+          group  => $::proftpd::group,
           before => File[$::proftpd::config],
         }
       }
@@ -66,6 +72,8 @@ class proftpd::config {
         file { $real_options['Global']['AuthGroupFile']:
           ensure => present,
           mode   => '0600',
+          owner  => $::proftpd::user,
+          group  => $::proftpd::group,
           before => File[$::proftpd::config],
         }
       }
@@ -88,32 +96,32 @@ class proftpd::config {
     file {
       $::proftpd::base_dir:
         ensure => directory,
-        owner  => $::proftpd::config_user,
-        group  => $::proftpd::config_group;
+        owner  => $::proftpd::user,
+        group  => $::proftpd::group;
 
       $::proftpd::log_dir:
         ensure => directory,
-        owner  => $::proftpd::config_user,
-        group  => $::proftpd::config_group;
+        owner  => $::proftpd::user,
+        group  => $::proftpd::group;
 
       $::proftpd::run_dir:
         ensure => directory,
-        owner  => $::proftpd::config_user,
-        group  => $::proftpd::config_group;
+        owner  => $::proftpd::user,
+        group  => $::proftpd::group;
 
       $::proftpd::config:
         ensure       => file,
         mode         => $::proftpd::config_mode,
         content      => template($::proftpd::config_template),
         validate_cmd => "${::proftpd::prefix_bin}/proftpd -t -c %",
-        owner        => $::proftpd::config_user,
-        group        => $::proftpd::config_group,
+        owner        => $::proftpd::user,
+        group        => $::proftpd::group,
         require      => $config_require;
     }
 
     concat { $modules_config:
-      owner  => $::proftpd::config_user,
-      group  => $::proftpd::config_group,
+      owner  => $::proftpd::user,
+      group  => $::proftpd::group,
       # modules may be required for validate_cmd to succeed
       before => File[$::proftpd::config],
     }
